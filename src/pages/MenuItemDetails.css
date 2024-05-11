@@ -1,0 +1,14 @@
+/* src/pages/MenuItemDetails.css */
+.menu-item-details {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+}
+
+.menu-item-details img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}

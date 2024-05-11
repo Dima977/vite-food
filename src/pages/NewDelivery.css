@@ -1,0 +1,74 @@
+/* NewDelivery.css */
+.delivery-page-container {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.delivery-orders-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.delivery-order-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: transform 0.2s ease;
+}
+
+.delivery-order-card:hover {
+    transform: translateY(-5px);
+}
+
+.delivery-order-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.delivery-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.delivery-form label, .delivery-form select, .delivery-form button {
+    margin-bottom: 10px;
+}
+
+/* NewDelivery.css */
+.new-delivery-order-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 8px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.new-delivery-order-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.new-delivery-order-card h4 {
+    margin-top: 0;
+    color: #333;
+}
+
+.new-delivery-order-card p, .new-delivery-order-card li {
+    margin: 4px 0;
+    color: #555;
+}
+
+.new-delivery-order-card ul {
+    padding-left: 16px;
+}
