@@ -126,9 +126,9 @@ def get_menuitems():
         print(f"Error fetching menu items: {e}")
         return jsonify({"error": "Failed to fetch menu items"}), 500
 
-@app.route('/static/<path:filename>')
-def static_files(filename):
-    return send_from_directory('static', filename)
+# @app.route('/static/<path:filename>')
+# def static_files(filename):
+#     return send_from_directory('static', filename)
 
 @app.route('/api/new-delivery-orders', methods=['GET'])
 def get_ready_delivery_orders():
@@ -207,8 +207,6 @@ def assign_courier(order_id):
         session.rollback()
         return jsonify({"error": "Не удалось назначить курьера на заказ"}), 500
 
-
-
 @app.route('/api/delivery-orders', methods=['GET'])
 def get_delivery_orders():
     """Возвращает заказы со статусом 'Курьер в пути'."""
@@ -234,8 +232,5 @@ def get_delivery_orders():
         print(f"Ошибка при получении заказов на доставку: {e}")
         return jsonify({'error': 'Не удалось получить заказы на доставку'}), 500
 
-
-
-        
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

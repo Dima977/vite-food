@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { YMaps, Map, Placemark } from 'react-yandex-maps';
+import OrderDetailsModal from '../components/OrderDetailsModal';
+import OrderCard from '../components/OrderCard'; // Используем существующий компонент
 import './Delivery.css';
 
-const cafeCoords = [58.6024, 49.6665]; // Предполагаем, что координаты верные
+const cafeCoords = [58.6024, 49.6665];
 
 function Delivery() {
     const [orders, setOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const [deliveryCoords, setDeliveryCoords] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -16,43 +19,37 @@ function Delivery() {
             .then(response => {
                 setOrders(response.data);
             })
-            .catch(error => console.error('Ошибка при загрузке заказов на доставку:', error));
+            .catch(error => console.error('Ошибка при загрузке заказов:', error));
     }, []);
 
-    const handleOrderClick = order => {
+    const handleOrderClick = async (order) => {
         setSelectedOrder(order);
+        const coords = await geocodeAddress(order.delivery_address);
+        setDeliveryCoords(coords);
+        setShowModal(true);
     };
 
-    const handleNewDeliveryClick = () => {
-        navigate('/new-delivery');
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedOrder(null);
+        setDeliveryCoords(null);
     };
 
     return (
         <div className="container">
             <h2>Текущие заказы на доставку</h2>
-            <button className="button" onClick={handleNewDeliveryClick}>Организовать доставку</button>
-            <div className="row">
+            <div className="orders-container">
                 {orders.map(order => (
-                    <div key={order.id} className="card" onClick={() => handleOrderClick(order)}>
-                        <div className="card-body">
-                            <h4 className="card-title">Заказ №{order.id}</h4>
-                            <p className="card-text">Адрес доставки: {order.delivery_address}</p>
-                            <p className="card-text">Курьер: {order.courier_name || 'Не назначен'}</p>
-                            <p className="card-text">Статус: {order.status}</p>
-                        </div>
-                    </div>
+                    <OrderCard 
+                    key={order.id} 
+                    order={order} 
+                    showStatusChange={false} // Скрыть возможность изменения статуса
+                />
+                
                 ))}
             </div>
-            {selectedOrder && (
-                <YMaps query={{ apikey: '994228ab-8801-4087-9652-80b12e558a2d' }}>
-                    <Map defaultState={{ center: cafeCoords, zoom: 10 }} width="100%" height="400px">
-                        <Placemark geometry={cafeCoords} />
-                        {selectedOrder.delivery_coords && (
-                            <Placemark geometry={selectedOrder.delivery_coords} /> 
-                        )}
-                    </Map>
-                </YMaps>
-            )}
+            <button className="button" onClick={() => navigate('/new-delivery')}>Организовать доставку</button>
+            {showModal && selectedOrder && <OrderDetailsModal key={selectedOrder.id} order={selectedOrder} cafeCoords={cafeCoords} deliveryCoords={deliveryCoords} onClose={handleCloseModal} />}
         </div>
     );
 }
