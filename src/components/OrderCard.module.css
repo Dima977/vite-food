@@ -1,0 +1,26 @@
+.orderCard {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.orderCard:hover {
+    transform: scale(1.02);
+}
+
+.orderCard h3 {
+    margin-top: 0;
+    font-size: 1.5em;
+}
+
+.orderCard p {
+    margin: 5px 0;
+}
+
+.itemsGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}

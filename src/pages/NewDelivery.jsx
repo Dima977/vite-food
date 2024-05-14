@@ -1,4 +1,3 @@
-// NewDelivery.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -63,7 +62,7 @@ function NewDelivery() {
                         className={`order-card ${order.id === selectedOrder ? 'selected' : ''}`}
                         onClick={() => selectOrder(order.id)}
                     >
-                        <h4>Заказ №{order.id}</h4>
+                        <h4>Заказ №{order.order_number}</h4> {/* Изменено отображение номера заказа */}
                         <p>Адрес доставки: {order.delivery_address}</p>
                     </div>
                 ))}

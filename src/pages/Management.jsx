@@ -1,28 +1,17 @@
-// src/pages/Management.jsx
-import React from "react";
-import { Link } from "react-router-dom";
-import "./Management.css"; // Подключи файл стилей для оформления
+import React, { useState } from 'react';
+import Tabs from '../components/Tabs';
+import MenuManagement from '../components/MenuManagement';
+import EmployeeManagement from '../components/EmployeeManagement';
+import styles from './Management.module.css';
 
 function Management() {
-    // Пример ресурсов для управления
-    const resources = [
-        { id: 1, type: "Menu", description: "Update menu items, prices, and availability." },
-        { id: 2, type: "Staff", description: "Manage staff schedules, roles, and contact information." },
-        { id: 3, type: "Inventory", description: "Track inventory levels and supply needs." },
-    ];
+    const [activeTab, setActiveTab] = useState('menu');
 
     return (
-        <div className="container">
-            <h1>Restaurant Management</h1>
-            <Link to="/">Back to Home</Link>
-            <ul>
-                {resources.map(resource => (
-                    <li key={resource.id}>
-                        <h3>{resource.type}</h3>
-                        <p>{resource.description}</p>
-                    </li>
-                ))}
-            </ul>
+        <div className={styles.tabsContainer}>
+            <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+            {activeTab === 'menu' && <MenuManagement />}
+            {activeTab === 'employees' && <EmployeeManagement />}
         </div>
     );
 }

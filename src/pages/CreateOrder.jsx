@@ -1,9 +1,11 @@
-// src/pages/CreateOrder.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ItemCard from "../components/ItemCard";
 import SelectedItems from "../components/SelectedItems";
 import "./CreateOrder.css";
+
+const cafeCoords = [58.6024, 49.6665];
+const deliveryRadius = 5000; // 5 км
 
 function CreateOrder() {
     const [order, setOrder] = useState({
@@ -73,7 +75,19 @@ function CreateOrder() {
                         }
                     }
                 );
-                setSuggestedAddresses(response.data.suggestions.map((suggestion) => suggestion.value));
+
+                const filteredSuggestions = await Promise.all(
+                    response.data.suggestions.map(async (suggestion) => {
+                        const coords = await geocodeAddress(suggestion.value);
+                        return { suggestion: suggestion.value, coords };
+                    })
+                );
+
+                const validSuggestions = filteredSuggestions.filter(({ coords }) =>
+                    isWithinDeliveryZone(coords)
+                );
+
+                setSuggestedAddresses(validSuggestions.map(({ suggestion }) => suggestion));
             } catch (error) {
                 console.error("Ошибка при загрузке подсказок адреса:", error);
             }
@@ -118,6 +132,44 @@ function CreateOrder() {
         } catch (error) {
             console.error("Ошибка при создании заказа:", error);
         }
+    };
+
+    const geocodeAddress = async (address) => {
+        try {
+            const response = await axios.get('https://geocode-maps.yandex.ru/1.x/', {
+                params: {
+                    geocode: address,
+                    format: 'json',
+                    apikey: '994228ab-8801-4087-9652-80b12e558a2d' // Используем ваш API ключ
+                }
+            });
+
+            const coords = response.data.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(' ');
+            return [parseFloat(coords[1]), parseFloat(coords[0])]; // Возвращаем координаты в правильном формате
+        } catch (error) {
+            console.error('Ошибка при геокодировании адреса:', error);
+            return null;
+        }
+    };
+
+    const isWithinDeliveryZone = (coords) => {
+        if (!coords) return false;
+
+        const [lat, lon] = coords;
+        const R = 6371e3; // Радиус Земли в метрах
+        const φ1 = cafeCoords[0] * Math.PI / 180;
+        const φ2 = lat * Math.PI / 180;
+        const Δφ = (lat - cafeCoords[0]) * Math.PI / 180;
+        const Δλ = (lon - cafeCoords[1]) * Math.PI / 180;
+
+        const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        const distance = R * c; // Расстояние в метрах
+
+        return distance <= deliveryRadius;
     };
 
     return (

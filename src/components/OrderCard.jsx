@@ -3,20 +3,16 @@ import React from "react";
 import ItemCard from "./ItemCard";
 import "./OrderCard.css";
 
-function OrderCard({ order, showStatusChange = false }) {
+function OrderCard({ order, showStatusChange = false, onStatusChange }) {
     return (
         <div className="order-card">
-            <h3>Номер заказа: {order.id}</h3>
-            <p>Имя клиента: {order.customer_name}</p>
+            <h3>Номер заказа: {order.order_number}</h3>
+            <p>Имя клиента: {order.customer_name || "Имя клиента не указано"}</p>
             <p>Дата создания: {order.created_at ? new Date(order.created_at).toLocaleString() : "Дата не указана"}</p>
-
-            {/* Отображаем статус доставки */}
             <p>{order.is_delivery ? "Заказ на доставку" : "Заказ без доставки"}</p>
-
-            {/* Если заказ на доставку, отображаем адрес */}
             {order.is_delivery && <p>Адрес доставки: {order.delivery_address}</p>}
-
-            {/* Отображение изменения статуса заказа если требуется */}
+            {order.courier_name && <p>Курьер: {order.courier_name}</p>}
+            <p>Статус: {order.status}</p>
             {showStatusChange && (
                 <label>
                     Статус:
@@ -27,18 +23,20 @@ function OrderCard({ order, showStatusChange = false }) {
                     </select>
                 </label>
             )}
-
-            {/* Всегда отображаем состав заказа */}
             <h4>Состав заказа:</h4>
             <div className="items-grid">
-                {order.items && order.items.map((item, index) => (
-                    <ItemCard
-                        key={index}
-                        name={item.name}
-                        image_url={item.image_url}
-                        quantity={item.quantity}
-                    />
-                ))}
+                {order.items && order.items.length > 0 ? (
+                    order.items.map((item, index) => (
+                        <ItemCard
+                            key={index}
+                            name={item.name}
+                            image_url={item.image_url}
+                            quantity={item.quantity}
+                        />
+                    ))
+                ) : (
+                    <p>Нет товаров в заказе</p>
+                )}
             </div>
         </div>
     );

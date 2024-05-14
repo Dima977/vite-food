@@ -12,12 +12,13 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/admin" element={<Home />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/delivery" element={<Delivery />} />
                 <Route path="/management" element={<Management />} />
                 <Route path="/create-order" element={<CreateOrder />} />
                 <Route path="/new-delivery" element={<NewDelivery />} />
+                <Route path="/" exact component={Orders} />
             </Routes>
         </Router>
     );

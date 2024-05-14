@@ -6,7 +6,7 @@ import "./Home.css";
 function Home() {
     return (
         <div>
-            <h1>Home</h1>
+            <h1>Домашняя страница</h1>
             <nav>
                 <ul>
                     <li>
@@ -16,7 +16,7 @@ function Home() {
                         <Link to="/delivery">Доставка</Link>
                     </li>
                     <li>
-                        <Link to="/management">Management</Link>
+                        <Link to="/management">Управление</Link>
                     </li>
                     <li>
                         <Link to="/create-order">Создать заказ</Link>
